@@ -1,0 +1,8 @@
+#!/bin/bash
+
+docker run \
+    --rm \
+    -it \
+    --name x2go_server \
+    --network x2go \
+    x2go
