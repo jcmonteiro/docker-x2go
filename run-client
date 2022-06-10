@@ -1,0 +1,20 @@
+#!/bin/bash
+
+xhost +SI:localuser:$USER
+export LIBGL_ALWAYS_INDIRECT=1
+mode_options='--security-opt=apparmor:unconfined --security-opt=seccomp:unconfined --cap-add=SYS_PTRACE --env=DISPLAY -end=XDG_RUNTIME_DIR'
+
+docker container run --rm -it -w "/home/x2go" \
+    --user $(id -u) \
+    --name x2go_client \
+    --security-opt=apparmor:unconfined --security-opt=seccomp:unconfined --cap-add=SYS_PTRACE --env=DISPLAY \
+    --gpus all -e NVIDIA_DRIVER_CAPABILITIES=all \
+    --volume="$HOME/.Xauthority:/home/x2go/.Xauthority:rw" \
+    --volume="/tmp/.X11-unix:/tmp/.X11-unix" \
+    --volume="$XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR" \
+    --privileged \
+    --env=DISPLAY \
+    --env=XDG_RUNTIME_DIR \
+    --network x2go \
+    x2go \
+    x2goclient
